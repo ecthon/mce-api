@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { ProductController } from "./product.controller.js";
+import { ProductController } from "./product.controller.ts";
 
 export default async function productRoutes(app: FastifyInstance) {
     const controller = new ProductController()

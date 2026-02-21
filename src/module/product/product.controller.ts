@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify"
-import { ProductService } from "./product.service.js"
+import { ProductService } from "./product.service.ts"
 
 export class ProductController {
 
@@ -9,12 +9,12 @@ export class ProductController {
         this.service = new ProductService()
     }
 
-    async getProducts(request: FastifyRequest, reply: FastifyReply) {
+    getProducts = async (request: FastifyRequest, reply: FastifyReply) => {
         const products = await this.service.getProducts()
         reply.send(products)
     }
 
-    async getProductById(request: FastifyRequest, reply: FastifyReply) {
+    getProductById = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = parseInt((request.params as { id: string }).id)
         const product = await this.service.getProductById(id)
         if (!product) {
@@ -23,7 +23,8 @@ export class ProductController {
         }
         reply.send(product)
     }
-    async createProduct(request: FastifyRequest, reply: FastifyReply) {
+
+    createProduct = async (request: FastifyRequest, reply: FastifyReply) => {
         const { name, price, categoryId, active } = request.body as { name: string; price: number, categoryId: number, active: boolean }
         if (!name || !price) {
             reply.status(400).send({ error: "Name and price are required" })
@@ -34,7 +35,7 @@ export class ProductController {
         reply.status(201).send(newProduct)
     }
 
-    async updateProduct(request: FastifyRequest, reply: FastifyReply) {
+    updateProduct = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = parseInt((request.params as { id: string }).id)
         const { name, price, categoryId, active } = request.body as { name?: string; price?: number, categoryId?: number, active?: boolean }
         const payload = Object.fromEntries(Object.entries({ name, price, categoryId, active }).filter(([, v]) => v !== undefined))
@@ -45,7 +46,8 @@ export class ProductController {
         }
         reply.send(updatedProduct)
     }
-    async deleteProduct(request: FastifyRequest, reply: FastifyReply) {
+
+    deleteProduct = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = parseInt((request.params as { id: string }).id)
         const success = await this.service.deleteProduct(id)
         if (!success) {
